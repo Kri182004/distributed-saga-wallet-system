@@ -23,9 +23,15 @@ public class CreditDestinationWalletStep implements SagaStepInterface {
     @Override
     @Transactional
     public boolean execute(SagaContext context) {
+        BigDecimal amount = context.getBigDecimal("amount");
+
+    if (amount.compareTo(new BigDecimal("5")) >= 0) {
+    log.info("🔥 Forced failure triggered");
+    throw new RuntimeException("Forced failure for compensation test");
+}
+
         try {
             Long toWalletId = context.getLong("toWalletId");
-            BigDecimal amount = context.getBigDecimal("amount");
 
             if (toWalletId == null || amount == null) {
                 log.error("Missing required context: toWalletId or amount");

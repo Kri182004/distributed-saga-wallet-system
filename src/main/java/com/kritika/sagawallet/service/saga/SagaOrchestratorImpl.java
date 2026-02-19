@@ -137,10 +137,20 @@ public class SagaOrchestratorImpl implements SagaOrchestrator {
             sagaStepRepository.save(sagaStepDB);
 
             // Execute the step
-            boolean success = step.execute(sagaContext);
+            boolean success;
 
-            if (success) {
-                sagaStepDB.markAsCompleted();
+           try {
+    success = step.execute(sagaContext);
+} catch (Exception ex) {
+    sagaStepDB.markAsFailed();
+    sagaStepDB.setErrorMessage(ex.getMessage());
+    sagaStepRepository.save(sagaStepDB);
+    throw ex;
+}
+
+if (success) {
+    sagaStepDB.markAsCompleted();
+    sagaStepRepository.save(sagaStepDB);
                 sagaStepRepository.save(sagaStepDB);
 
                 // Update saga instance

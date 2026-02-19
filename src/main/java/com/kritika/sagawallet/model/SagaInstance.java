@@ -1,34 +1,51 @@
 package com.kritika.sagawallet.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.*;
 
-import org.apache.tomcat.JarScanType;
-
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "saga_instance")
 @Data
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
-@Table(name = "saga_instance")
+@Builder
 public class SagaInstance {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private SagaStatus status = SagaStatus.STARTED;
+    @Column(nullable = false)
+    private SagaStatus status;
 
-    @Type(JarScanType.class)
-    @Column(name = "context", columnDefinition = "json")
+    @Column(columnDefinition = "json")
     private String context;
 
     @Column(name = "current_step")
     private String currentStep;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        if (this.status == null) {
+            this.status = SagaStatus.STARTED;
+        }
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     public void markAsRunning() {
         this.status = SagaStatus.RUNNING;
