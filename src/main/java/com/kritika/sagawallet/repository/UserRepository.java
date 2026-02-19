@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.kritika.sagawallet.model.User;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

@@ -18,10 +18,10 @@ import java.math.BigDecimal;
 public class TransferRequestDTO {
 
     @NotNull(message = "Source wallet ID cannot be null")
-    private Long fromWalletId;
+    private String  fromWalletId;
 
     @NotNull(message = "Destination wallet ID cannot be null")
-    private Long toWalletId;
+    private String toWalletId;
 
     @NotNull(message = "Amount cannot be null")
     @DecimalMin(value = "0.01", message = "Amount must be greater than 0")

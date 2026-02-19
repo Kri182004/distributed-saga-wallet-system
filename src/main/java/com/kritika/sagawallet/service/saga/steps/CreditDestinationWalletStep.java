@@ -18,16 +18,16 @@ import java.math.BigDecimal;
 @Slf4j
 public class CreditDestinationWalletStep implements SagaStepInterface {
 
-    private final WalletRepository walletRepository;
+private final WalletRepository walletRepository;
 
     @Override
     @Transactional
     public boolean execute(SagaContext context) {
         BigDecimal amount = context.getBigDecimal("amount");
 
-    if (amount.compareTo(new BigDecimal("5")) >= 0) {
-    log.info("🔥 Forced failure triggered");
-    throw new RuntimeException("Forced failure for compensation test");
+   if (amount.compareTo(new BigDecimal("5")) >= 0) {
+   // log.info("🔥 Forced failure triggered");
+   // throw new RuntimeException("Forced failure for compensation test");
 }
 
         try {

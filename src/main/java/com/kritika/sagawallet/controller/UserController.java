@@ -9,7 +9,6 @@ import com.kritika.sagawallet.model.User;
 import com.kritika.sagawallet.service.UserService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor

@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "saga_instance")
 @Data
@@ -15,6 +17,7 @@ public class SagaInstance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
     @Enumerated(EnumType.STRING)

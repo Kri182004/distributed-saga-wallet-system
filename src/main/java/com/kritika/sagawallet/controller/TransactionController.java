@@ -35,8 +35,8 @@ public class TransactionController {
                 request.getFromWalletId(), request.getToWalletId(), request.getAmount());
 
         Long sagaInstanceId = transferSagaService.initiateTransfer(
-                request.getFromWalletId(),
-                request.getToWalletId(),
+            Long.parseLong(request.getFromWalletId()),
+    Long.parseLong(request.getToWalletId()),
                 request.getAmount(),
                 request.getDescription()
         );

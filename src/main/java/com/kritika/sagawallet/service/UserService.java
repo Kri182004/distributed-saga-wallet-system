@@ -23,10 +23,6 @@ public class UserService {
     public User createUser(User user) {
         log.info("Creating user with email: {}", user.getEmail());
 
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             throw new IllegalArgumentException("User email cannot be null or empty");
         }

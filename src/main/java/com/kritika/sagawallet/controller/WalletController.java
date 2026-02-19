@@ -12,17 +12,20 @@ import com.kritika.sagawallet.dto.CreditWalletRequestDTO;
 import com.kritika.sagawallet.dto.DebitWalletRequestDTO;
 import com.kritika.sagawallet.dto.WalletBalanceDTO;
 import com.kritika.sagawallet.model.Wallet;
+import com.kritika.sagawallet.repository.WalletRepository;
 import com.kritika.sagawallet.service.WalletService;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/wallets")
+@RequestMapping(value = "/api/v1/wallets", produces = "application/json")
 @Slf4j
 public class WalletController {
 
     private final WalletService walletService;
+    private final WalletRepository walletRepository;
+    
 
     @PostMapping
     public ResponseEntity<Wallet> createWallet(@Valid @RequestBody CreateWalletRequestDTO request) {
@@ -41,6 +44,11 @@ public class WalletController {
         Wallet wallet = walletService.getWalletById(id);
         return ResponseEntity.ok(wallet);
     }
+    @GetMapping
+public ResponseEntity<List<Wallet>> getAllWallets() {
+    return ResponseEntity.ok(walletRepository.findAll());
+}
+
 
     @GetMapping("/{id}/balance")
     public ResponseEntity<WalletBalanceDTO> getWalletBalance(@PathVariable Long id) {
