@@ -127,4 +127,3 @@ public ResponseEntity<List<Wallet>> getAllWallets() {
         return ResponseEntity.noContent().build();
     }
 }
-
