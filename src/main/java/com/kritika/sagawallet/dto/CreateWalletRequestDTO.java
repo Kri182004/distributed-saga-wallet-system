@@ -15,4 +15,5 @@ public class CreateWalletRequestDTO {
 
     @NotNull(message = "User ID cannot be null")
     private Long userId;
+    private java.math.BigDecimal initialBalance;
 }

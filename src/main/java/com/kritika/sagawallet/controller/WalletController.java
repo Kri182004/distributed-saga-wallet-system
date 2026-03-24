@@ -31,7 +31,7 @@ public class WalletController {
     public ResponseEntity<Wallet> createWallet(@Valid @RequestBody CreateWalletRequestDTO request) {
         log.info("Creating wallet for user {}", request.getUserId());
 
-        Wallet wallet = walletService.createWallet(request.getUserId());
+        Wallet wallet = walletService.createWallet(request.getUserId(), request.getInitialBalance());
 
         log.info("Wallet {} created successfully for user {}", wallet.getId(), request.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(wallet);

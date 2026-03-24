@@ -25,8 +25,8 @@ public class WalletService {
     private final UserService userService;
 
     @Transactional
-    public Wallet createWallet(Long userId) {
-        log.info("Creating wallet for user {}", userId);
+    public Wallet createWallet(Long userId, BigDecimal initialBalance) {
+        log.info("Creating wallet for user {} with initial balance {}", userId, initialBalance);
 
         try {
             // Validate user exists
@@ -41,7 +41,7 @@ public class WalletService {
             Wallet wallet = Wallet.builder()
                     .userId(userId)
                     .isActive(true)
-                    .balance(BigDecimal.ZERO)
+                    .balance(initialBalance != null ? initialBalance : BigDecimal.ZERO)
                     .build();
 
             wallet = walletRepository.save(wallet);
