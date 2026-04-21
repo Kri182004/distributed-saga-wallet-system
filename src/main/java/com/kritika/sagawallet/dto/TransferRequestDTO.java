@@ -29,4 +29,7 @@ public class TransferRequestDTO {
 
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
+
+    @NotNull(message = "Request ID cannot be null")
+private String requestId;
 }

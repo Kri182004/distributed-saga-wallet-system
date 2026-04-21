@@ -27,7 +27,7 @@ public class TransactionService {
 
     @Transactional
     public Transaction createTransaction(Long fromWalletId, Long toWalletId,
-                                         BigDecimal amount, String description) {
+                                         BigDecimal amount, String description,String requestId) {
         log.info("Creating transaction from wallet {} to wallet {} with amount {} and description '{}'",
                 fromWalletId, toWalletId, amount, description);
 
@@ -43,6 +43,7 @@ public class TransactionService {
                     .toWalletId(toWalletId)
                     .amount(amount)
                     .description(description != null ? description : "")
+                    .requestId(requestId)
                     .status(TransactionStatus.PENDING)
                     .type(TransactionType.TRANSFER)
                     .build();

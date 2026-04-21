@@ -191,4 +191,19 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+public ResponseEntity<ErrorResponse> handleDuplicateRequest(
+        org.springframework.dao.DataIntegrityViolationException ex, WebRequest request) {
+    log.warn("Duplicate transfer request detected: {}", ex.getMessage());
+
+    ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .error("Duplicate Request")
+            .message("This transfer has already been processed.")
+            .path(request.getDescription(false).replace("uri=", ""))
+            .build();
+
+    return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+}
 }

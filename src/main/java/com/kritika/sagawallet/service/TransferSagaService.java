@@ -29,7 +29,7 @@ public class TransferSagaService {
 
     @Transactional
     public Long initiateTransfer(Long fromWalletId, Long toWalletId,
-                                 BigDecimal amount, String description) {
+                                 BigDecimal amount, String description,String requestId) {
 
         log.info("Initiating transfer from wallet {} to wallet {} with amount {} and description '{}'",
                 fromWalletId, toWalletId, amount, description);
@@ -42,7 +42,7 @@ public class TransferSagaService {
 
             // Create transaction record
             Transaction transaction = transactionService.createTransaction(
-                    fromWalletId, toWalletId, amount, description);
+                    fromWalletId, toWalletId, amount, description,requestId);
 
             // Create saga context with all necessary data
             SagaContext sagaContext = SagaContext.builder()

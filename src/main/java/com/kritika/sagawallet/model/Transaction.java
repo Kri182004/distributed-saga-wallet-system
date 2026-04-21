@@ -50,6 +50,9 @@ public class Transaction {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "request_id", unique = true)
+private String requestId;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

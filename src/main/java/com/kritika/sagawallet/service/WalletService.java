@@ -10,19 +10,28 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kritika.sagawallet.exceptions.InsufficientBalanceException;
 import com.kritika.sagawallet.exceptions.ResourceNotFoundException;
 import com.kritika.sagawallet.exceptions.WalletException;
+import com.kritika.sagawallet.model.OutboxEvent;
 import com.kritika.sagawallet.model.Wallet;
 import com.kritika.sagawallet.repository.WalletRepository;
 
+import groovy.transform.builder.Builder;
+
+import com.kritika.sagawallet.model.OutboxEvent;
+import com.kritika.sagawallet.repository.OutboxRepository;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Builder
 @Slf4j
 @RequiredArgsConstructor
 public class WalletService {
 
     private final WalletRepository walletRepository;
     private final UserService userService;
+    private final OutboxRepository outboxRepository;
 
     @Transactional
     public Wallet createWallet(Long userId, BigDecimal initialBalance) {
@@ -138,7 +147,17 @@ public class WalletService {
             if (rowsUpdated == 0) {
                 throw new WalletException("Failed to credit wallet - wallet may have become inactive");
             }
-
+            OutboxEvent event = OutboxEvent.builder()
+                    .userId(userId) // Ensures it hits the same shard
+                .aggregateType("WALLET")
+                .aggregateId(wallet.getId().toString())
+                .type("BALANCE_CREDITED")
+                .payload(String.format("{\"amount\": %s, \"newBalance\": %s}", 
+                        amount, wallet.getBalance().add(amount)))
+                .status("PENDING")
+                .createdAt(LocalDateTime.now())
+                .build();
+outboxRepository.save(event);
 
             log.info("Successfully credited {} to user {}. New balance: {}",
                     amount, userId);

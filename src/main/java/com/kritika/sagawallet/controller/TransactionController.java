@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,6 +27,7 @@ public class TransactionController {
     private final TransferSagaService transferSagaService;
     private final SagaOrchestrator sagaOrchestrator;
     private final ObjectMapper objectMapper;
+    private final com.kritika.sagawallet.repository.TransactionRepository transactionRepository;
 
     @PostMapping("/transfer")
     public ResponseEntity<TransferResponseDTO> createTransfer(
@@ -35,10 +37,12 @@ public class TransactionController {
                 request.getFromWalletId(), request.getToWalletId(), request.getAmount());
 
         Long sagaInstanceId = transferSagaService.initiateTransfer(
+            
             Long.parseLong(request.getFromWalletId()),
     Long.parseLong(request.getToWalletId()),
                 request.getAmount(),
-                request.getDescription()
+                request.getDescription(),
+                request.getRequestId()
         );
 
         SagaInstance saga = sagaOrchestrator.getSagaInstance(sagaInstanceId);
@@ -66,6 +70,11 @@ public class TransactionController {
         SagaInstance saga = sagaOrchestrator.getSagaInstance(sagaInstanceId);
         return ResponseEntity.ok(saga);
     }
+    @GetMapping
+public ResponseEntity<List<com.kritika.sagawallet.model.Transaction>> getAllTransactions() {
+    log.info("Fetching all transactions");
+    return ResponseEntity.ok(transactionRepository.findAll());
+}
 
     private Long extractTransactionIdFromSaga(SagaInstance saga) {
         try {
